@@ -1,0 +1,100 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: #0f0f0f;
+  background-color: #f6f6f6;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+body{
+  background: rgb(2,0,36);
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+  width: 100%;
+  /* Добавьте margin-top равный высоте titlebar */
+  margin-top: 30px; /* Вы можете изменить значение в соответствии с высотой вашего titlebar */
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 10px 12px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: #262626;
+}
+
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+.topnav-right {
+  float: right;
+  display: flex;
+  align-items: center;
+}
+.color-picker-container {
+  margin: auto;
+  width: 50%;
+  /*border: 3px solid green;*/
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* или любое другое значение, которое вам нужно */
+}
+
+.power-button{
+  background-color: transparent;
+  border: 2px transparent hidden;
+  border-radius: 50%;
+  margin: 5px;
+}
+
+.power-icon {
+  fill: #ffffff;
+  border-color: #ffffff;
+}
+.power-button.on .power-icon {
+  fill: #10f100;
+  border-color: #04AA6D;
+}
+
+/*Window*/
+.titlebar {
+  height: 30px;
+  background: #101010;
+  user-select: none;
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.titlebar-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+}
+.titlebar-button:hover {
+  background: #6e6e6e;
+}
