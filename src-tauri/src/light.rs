@@ -1,7 +1,7 @@
 use btleplug::api::{
-    bleuuid::uuid_from_u16, Central, Manager as _, Peripheral as _, ScanFilter, WriteType,
+     Central, Peripheral as _
 };
-use btleplug::platform::{Adapter, Manager, Peripheral};
+use btleplug::platform::{Adapter, Peripheral};
 
 pub async fn find_light(central: &Adapter) -> Option<Peripheral> {
     for p in central.peripherals().await.unwrap() {

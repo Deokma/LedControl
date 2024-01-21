@@ -1,10 +1,10 @@
 [package]
 name = "ledcontrolr"
-version = "0.2.2"
+version = "0.2.7"
 description = "Control yours led ble devices"
 authors = ["Deokma"]
 license = "MIT"
-repository = ""
+repository = "https://github.com/Deokma/LedControl.git"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

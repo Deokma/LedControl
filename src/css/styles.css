@@ -5,7 +5,7 @@
   font-weight: 400;
 
   color: #0f0f0f;
-  background-color: #f6f6f6;
+  background-color: #1b2333;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -14,15 +14,28 @@
   -webkit-text-size-adjust: 100%;
 }
 body{
-  background: rgb(2,0,36);
+  background: #1b2333;
 }
 
 .topnav {
   overflow: hidden;
-  background-color: #333;
+  background-color: #313335;
   width: 100%;
   /* Добавьте margin-top равный высоте titlebar */
   margin-top: 30px; /* Вы можете изменить значение в соответствии с высотой вашего titlebar */
+  position: relative; /* Добавлено для позиционирования псевдоэлемента */
+}
+
+/* Добавленный стиль для линии между topnav и titlebar */
+.topnav::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: #54575b; /* Серый цвет линии */
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .topnav a {
@@ -34,16 +47,16 @@ body{
   font-size: 14px;
 }
 
-
 .topnav a:hover {
   background-color: #ddd;
   color: #262626;
 }
 
 .topnav a.active {
-  background-color: #04AA6D;
+  background-color: #54575b;
   color: white;
 }
+
 .topnav-right {
   float: right;
   display: flex;
@@ -79,7 +92,7 @@ body{
 /*Window*/
 .titlebar {
   height: 30px;
-  background: #101010;
+  background: #333;
   user-select: none;
   display: flex;
   justify-content: flex-end;
@@ -88,6 +101,7 @@ body{
   left: 0;
   right: 0;
 }
+
 .titlebar-button {
   display: inline-flex;
   justify-content: center;
@@ -95,6 +109,212 @@ body{
   width: 30px;
   height: 30px;
 }
+
 .titlebar-button:hover {
-  background: #6e6e6e;
+  background: #8c8c8c;
+}
+
+.titlebar-button-close:hover {
+  background-color: crimson;
+}
+.rgb-inputs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rgb-inputs input {
+  width: 70px; /* Ширина инпута */
+  text-align: center; /* Выравнивание текста по центру */
+  margin: 0 1px; /* Расстояние между инпутами */
+  border: 1px solid black; /* Черная обводка */
+  color: white; /* Белый текст */
+  background-color: transparent; /* Прозрачный фон */
+  padding: 5px; /* Поля вокруг текста */
+}
+.brightness{
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 200px;
+  background-color: transparent;
+
+  &:focus {
+    outline-color: #f8b195;
+  }
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: rgb(255, 255, 255);
+  background: -webkit-linear-gradient(
+          left,
+          rgb(28, 28, 28) 0%,
+          rgb(157, 157, 157) 50%,
+          rgb(255, 255, 255) 100%
+  );
+  background: linear-gradient(
+          to right,
+          rgb(28, 28, 28) 0%,
+          rgb(157, 157, 157) 50%,
+          rgb(255, 255, 255) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(
+          startColorstr="#f67280",
+          endColorstr="#355c7d",
+          GradientType=1
+  );
+}
+
+input[type="range"]::-moz-range-track {
+  -moz-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: rgb(255, 255, 255);
+  background: -moz-linear-gradient(
+          left,
+          rgb(28, 28, 28) 0%,
+          rgb(157, 157, 157) 50%,
+          rgb(255, 255, 255) 100%
+  );
+  background: linear-gradient(
+          to right,
+          rgb(28, 28, 28) 0%,
+          rgb(157, 157, 157) 50%,
+          rgb(255, 255, 255) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(
+          startColorstr="#f67280",
+          endColorstr="#355c7d",
+          GradientType=1
+  );
+}
+
+input[type="range"]::-ms-track {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: rgb(255, 255, 255);
+  background: -moz-linear-gradient(
+          left,
+          rgb(28, 28, 28) 0%,
+          rgb(157, 157, 157) 50%,
+          rgb(255, 255, 255) 100%
+  );
+  background: -webkit-linear-gradient(
+          left,
+          rgb(28, 28, 28) 0%,
+          rgb(157, 157, 157) 50%,
+          rgb(255, 255, 255) 100%
+  );
+  background: linear-gradient(
+          to right,
+          rgb(28, 28, 28) 0%,
+          rgb(157, 157, 157) 50%,
+          rgb(255, 255, 255) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(
+          startColorstr="#f67280",
+          endColorstr="#355c7d",
+          GradientType=1
+  );
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  position: relative;
+  bottom: 8px;
+  background: #222
+  url("http://codemenatalie.com/wp-content/uploads/2019/09/slider-thumb.png")
+  center no-repeat;
+  background-size: 50%;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.4);
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+
+input[type="range"]::-moz-range-thumb {
+  -moz-appearance: none;
+  appearance: none;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  position: relative;
+  bottom: 8px;
+  background: #222
+  url("http://codemenatalie.com/wp-content/uploads/2019/09/slider-thumb.png")
+  center no-repeat;
+  background-size: 50%;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.4);
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+input[type="range"]::-ms-thumb {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  position: relative;
+  bottom: 8px;
+  background: #222
+  url("http://codemenatalie.com/wp-content/uploads/2019/09/slider-thumb.png")
+  center no-repeat;
+  background-size: 50%;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.4);
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.tab-content {
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.styles-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.styles-buttons button {
+  width: 90%; /* Set the width to 100% */
+  margin-bottom: 5px; /* Add margin if needed */
+  transition-duration: 0.4s;
+  color: white;
+  background-color: #1b2333;
+  border: 2px solid white;
+}
+.styles-buttons button:hover{
+  background-color: white; /* Green */
+  color: black;
 }

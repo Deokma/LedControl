@@ -6,7 +6,7 @@ mod light;
 use btleplug::api::{
     bleuuid::uuid_from_u16, Central, Manager as _, Peripheral as _, ScanFilter, WriteType,
 };
-use btleplug::platform::{Adapter, Manager, Peripheral};
+use btleplug::platform::{Manager, Peripheral};
 use std::error::Error;
 use std::time::Duration;
 use tokio::time;
@@ -16,16 +16,12 @@ use std::sync::{Arc, Mutex};
 use once_cell::sync::Lazy;
 use tauri::{CustomMenuItem, Manager as Manager_tauri, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem};
 static LIGHT: Lazy<Arc<Mutex<Option<Peripheral>>>> = Lazy::new(|| Arc::new(Mutex::new(None)));
-
 const LIGHT_CHARACTERISTIC_UUID: Uuid = uuid_from_u16(0xFFF3);
-enum TypeOfLedOpetration
-{
-    POWER,
-    COLOR,
-    MODES,
-    CUSTOM
+
+fn convert_brightness_to_hex(value: u8) -> Vec<u8> {
+    vec![value]
 }
-async fn send_data(light: &Peripheral, name: &str, cmd_char: &btleplug::api::Characteristic) -> Result<(), Box<dyn Error>>
+async fn send_data(light: &Peripheral, name: &str,light_command: &str, cmd_char: &btleplug::api::Characteristic) -> Result<(), Box<dyn Error>>
 {
     // Разбиваем строку name на части по 2 символа и добавляем префикс 0x
     let name_bytes: Vec<u8> = name.as_bytes()
@@ -36,11 +32,19 @@ async fn send_data(light: &Peripheral, name: &str, cmd_char: &btleplug::api::Cha
         })
         .collect();
 
-    println!("{}",name_bytes.len());
-    let color_cmd = match name_bytes.len() {
-        1=> vec![0x7E, 0x04, 0x04, 0x00, 0x00, name_bytes[0], 0xff, 0x00, 0xEF],
-        3=> vec![0x7E, 0x07, 0x05, 0x03, name_bytes[0], name_bytes[1], name_bytes[2], 0x10, 0xEF],
-        _ => vec![0x7E, 0x07, 0x05, 0x03, name_bytes[0], name_bytes[1], name_bytes[2], 0x10, 0xEF]
+    println!("Name bytes.len: {}",name_bytes.len());
+    println!("Name_bytes[0]: {}",name_bytes[0].to_ascii_lowercase());
+    let color_cmd = match light_command {
+        "power"=> vec![0x7E, 0x04, 0x04, 0x00, 0x00, name_bytes[0], 0xff, 0x00, 0xEF],
+        "color"=> vec![0x7E, 0x07, 0x05, 0x03, name_bytes[0], name_bytes[1], name_bytes[2], 0x10, 0xEF],
+        "brightness" => {
+            let brightness_value = name_bytes[0]; // Здесь предполагается, что значение яркости - первый байт
+            let brightness_hex = convert_brightness_to_hex(brightness_value);
+            println!("{}",brightness_hex[0]);
+            vec![0x7E, 0x04, 0x01, brightness_hex[0], 0xff, 0xff, 0xff, 0x00, 0xEF]
+        },
+        "styles"=> vec![0x7E, 0x05, 0x03, name_bytes[0], 0x03, 0xff, 0xff, 0x00, 0xEF],
+        _ => vec![0x7E, 0x07, 0x05, 0x03, 0xff, 0xff, 0xff, 0x10, 0xEF]
     };
     // Используем первые три байта из name_bytes вместо rng.gen()
 
@@ -85,7 +89,7 @@ async fn connect_light() -> Result<(), Box<dyn Error>> {
 
 
 #[tauri::command]
-fn send_light_data(name: &str) -> Result<(), String> {
+fn send_light_data(name: &str,light_command: &str) -> Result<(), String> {
     task::block_in_place(|| {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
             let light = LIGHT.lock().unwrap();
@@ -96,15 +100,15 @@ fn send_light_data(name: &str) -> Result<(), String> {
                 .iter()
                 .find(|c| c.uuid == LIGHT_CHARACTERISTIC_UUID)
                 .ok_or("Unable to find characteristics")?;
-            println!("Send data {}", name);
-            send_data(light, name, cmd_char).await.map_err(|e| e.to_string())
-
+            println!("Send data {}", light_command);
+            send_data(light, name, light_command, cmd_char).await.map_err(|e| e.to_string())
         })
     })
 }
 
 
 fn main() {
+    let power_indicate = Arc::new(Mutex::new(false));
     task::block_in_place(|| {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
             if let Err(err) = connect_light().await {
@@ -122,9 +126,10 @@ fn main() {
         .add_item(quit);
         //.add_item(hide);
     let tray = SystemTray::new().with_menu(tray_menu);
+    let power_indicate_clone = Arc::clone(&power_indicate);
     tauri::Builder::default()
         .system_tray(tray)
-        .on_system_tray_event(|app, event| match event {
+        .on_system_tray_event(move|app, event| match event {
             SystemTrayEvent::DoubleClick {
                 position: _,
                 size: _,
@@ -136,6 +141,19 @@ fn main() {
 
             SystemTrayEvent::MenuItemClick { id, .. } => {
                 match id.as_str() {
+                    "power" => {
+                        let mut power_indicate = power_indicate_clone.lock().unwrap();
+                        match *power_indicate {
+                            false => {
+                                *power_indicate = true;
+                                let _ = send_light_data("01", "power");
+                            },
+                            true => {
+                                *power_indicate = false;
+                                let _ = send_light_data("00", "power");
+                            }
+                        }
+                    }
                     "quit" => {
                         std::process::exit(0);
                     }
